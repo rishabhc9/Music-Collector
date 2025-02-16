@@ -1,0 +1,76 @@
+Static IP Instructions
+Edit the DHCP Configuration File:
+Open the DHCP configuration file:
+
+sudo nano /etc/dhcpcd.conf
+
+Add Static IP Configuration:
+Replace 192.168.1.100 with your desired static IP and 192.168.1.1 with your router's IP:
+
+interface wlan0
+static ip_address=192.168.1.100/24
+static routers=192.168.1.1
+static domain_name_servers=8.8.8.8 8.8.4.4
+
+Restart Networking:
+Apply the changes:
+
+sudo systemctl restart dhcpcd
+
+Verify the Static IP:
+Check the IP address:
+hostname -I
+
+
+
+
+
+
+Detailed Steps to Create a Service on Raspberry Pi
+Create a Service File:
+Open a new service file using nano:
+sudo nano /etc/systemd/system/music_collector.service
+
+Add the Following Content:
+Replace /path/to/your/script.py with the actual path to your script.
+
+
+[Unit]
+Description=Music Collector Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /path/to/your/script.py
+WorkingDirectory=/path/to/your/script/directory
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+
+
+Reload Systemd and Enable the Service:
+sudo systemctl daemon-reload
+sudo systemctl enable music_collector.service
+sudo systemctl start music_collector.service
+
+Check the Status:
+Verify the service is running:
+sudo systemctl status music_collector.service
+
+
+
+
+
+Setup Audio In Raspberry Pi
+https://www.instructables.com/Pi-Home-a-Raspberry-Powered-Virtual-Assistant/
+
+sudo apt-get install espeak
+
+sudo apt-get install flac
+
+sudo apt-get install libportaudio0 libportaudio2 libportaudiocpp0 portaudio19-dev
+sudo pip3 install pyaudio
+
+jack_control start
+
