@@ -201,15 +201,16 @@ def wifi_config():
     
     return render_template('wifi_config.html')
 
-@app.route('/download_all_songs')
-def download_all_songs():
-    """Download all songs as a ZIP file."""
+@app.route('/download_selected_songs', methods=['POST'])
+def download_selected_songs():
+    """Download selected songs as a ZIP file."""
+    selected_songs = request.form.getlist('selected_songs')
     memory_file = io.BytesIO()
     with zipfile.ZipFile(memory_file, 'w') as zf:
-        for song in os.listdir(SONG_DIRECTORY):
+        for song in selected_songs:
             zf.write(os.path.join(SONG_DIRECTORY, song), song)
     memory_file.seek(0)
-    return send_file(memory_file, download_name='downloaded_songs.zip', as_attachment=True)
+    return send_file(memory_file, download_name='selected_songs.zip', as_attachment=True)
 
 @app.route('/downloads/<filename>')
 def download_file(filename):

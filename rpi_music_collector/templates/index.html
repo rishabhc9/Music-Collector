@@ -6,6 +6,16 @@
     <title>MusicCollector</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .scrollable-box {
+            max-height: 300px; /* Adjust height as needed */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -26,46 +36,52 @@
     </nav>
 
     <div class="container mt-4">
-        <style>
-            .scrollable-table {
-                max-height: 400px; /* Adjust height as needed */
-                overflow-y: auto;
-                display: block;
-            }
-        </style>
-        
-        <div class="container mt-4">
-            <h1 class="mb-4">Song History</h1>
-            <div class="scrollable-table">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Title</th>
-                            <th>Artist</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Day of Week</th>
-                            <th>Time Category</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for song in history %}
-                        <tr>
-                            <td>{{ song.title }}</td>
-                            <td>{{ song.artist }}</td>
-                            <td>{{ song.date }}</td>
-                            <td>{{ song.time }}</td>
-                            <td>{{ song.day_of_week }}</td>
-                            <td>{{ song.time_category }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-        <div class="container mt-4">
-            <a href="{{ url_for('download_all_songs') }}" class="btn btn-primary mb-3">Download All Songs as ZIP</a>
+        <h1 class="mb-4">Song History</h1>
+        <div class="scrollable-box">
+        <div class="scrollable-table">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Day of Week</th>
+                        <th>Time Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for song in history %}
+                    <tr>
+                        <td>{{ song.title }}</td>
+                        <td>{{ song.artist }}</td>
+                        <td>{{ song.date }}</td>
+                        <td>{{ song.time }}</td>
+                        <td>{{ song.day_of_week }}</td>
+                        <td>{{ song.time_category }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
+        <div class="container mt-4">
+            <h2>Downloaded Songs</h2>
+            <div class="scrollable-box">
+                <form action="{{ url_for('download_selected_songs') }}" method="post">
+                    <div class="list-group">
+                        {% for song in downloaded_songs %}
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" name="selected_songs" value="{{ song }}">
+                            {{ song }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Download Selected Songs as ZIP</button>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
