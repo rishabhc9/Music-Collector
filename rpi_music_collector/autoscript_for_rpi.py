@@ -69,15 +69,16 @@ def is_song_already_detected(title, artist):
     return False
 
 def download_song(title, artist):
-    """Download the song using ytmdl."""
     print(f"Downloading {title} by {artist}...")
     try:
-        # Auto-select choice "1" and ignore errors
-        command = f'echo 1 | ytmdl "{title} {artist}" -o "{SONG_DIRECTORY}" --ignore-errors --format mp3 --skip-meta'
-        subprocess.run(command, shell=True, check=True)
+        # Use yt-dlp directly
+        command = f'yt-dlp -x --audio-format mp3 -o "{SONG_DIRECTORY}/%(title)s.%(ext)s" "ytsearch1:{title} {artist}"'
+        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
         print(f"Downloaded: {title} by {artist}")
+        print("Command Output:", result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Download failed: {e}")
+        print("Error Output:", e.stderr)
 
 async def recognize_song(file_path):
     """Recognize a song using Shazam."""
