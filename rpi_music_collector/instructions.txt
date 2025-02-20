@@ -24,40 +24,28 @@ hostname -I
 
 
 
+Create a Desktop Entry:
 
+mkdir -p ~/.config/autostart
+nano ~/.config/autostart/song_recognition.desktop
 
-Detailed Steps to Create a Service on Raspberry Pi
-Create a Service File:
-Open a new service file using nano:
-sudo nano /etc/systemd/system/music_collector.service
+Add the following content to the file:
 
-Add the Following Content:
-Replace /path/to/your/script.py with the actual path to your script.
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/python3 /path/to/your/script.py
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Song Recognition
+Comment=Start Song Recognition on boot
+Replace /path/to/your/script.py with the actual path to your Python script.
 
+Make the Script Executable:
+chmod +x /path/to/your/script.py
 
-[Unit]
-Description=Music Collector Service
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/python3 /path/to/your/script.py
-WorkingDirectory=/path/to/your/script/directory
-Restart=always
-User=pi
-
-[Install]
-WantedBy=multi-user.target
-
-
-Reload Systemd and Enable the Service:
-sudo systemctl daemon-reload
-sudo systemctl enable music_collector.service
-sudo systemctl start music_collector.service
-
-Check the Status:
-Verify the service is running:
-sudo systemctl status music_collector.service
-
+Reboot to Test:
+sudo reboot
 
 
 
