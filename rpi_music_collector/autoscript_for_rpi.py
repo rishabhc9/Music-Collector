@@ -12,6 +12,11 @@ import speech_recognition as sr
 import zipfile
 import io
 
+from collections import defaultdict, Counter
+from bokeh.plotting import figure
+from bokeh.embed import components
+from bokeh.resources import CDN
+
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
@@ -202,6 +207,14 @@ def wifi_config():
     
     return render_template('wifi_config.html')
 
+@app.route('/delete_songs', methods=['POST'])
+def delete_songs():
+    """Delete selected songs from the directory."""
+    selected_songs = request.form.getlist('selected_songs')
+    for song in selected_songs:
+        os.remove(os.path.join(SONG_DIRECTORY, song))
+    return "Selected songs deleted."
+
 @app.route('/download_selected_songs', methods=['POST'])
 def download_selected_songs():
     """Download selected songs as a ZIP file."""
@@ -212,6 +225,114 @@ def download_selected_songs():
             zf.write(os.path.join(SONG_DIRECTORY, song), song)
     memory_file.seek(0)
     return send_file(memory_file, download_name='selected_songs.zip', as_attachment=True)
+
+from collections import defaultdict
+@app.route('/listening_stats')
+def listening_stats():
+    """Render the listening stats dashboard."""
+    history = []
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, "r") as file:
+            try:
+                history = json.load(file)
+            except json.JSONDecodeError:
+                history = []
+
+    # Unique song tracking
+    unique_songs = set()
+    unique_artists = set()
+    artist_count = defaultdict(int)
+    date_count = defaultdict(int)
+    time_category_count = defaultdict(int)
+    day_of_week_count = defaultdict(int)
+    month_count = defaultdict(int)
+
+    for song in history:
+        # Create a unique identifier for the song (title + all artists)
+        song_key = (song.get("title", "Unknown"), song.get("artist", "Unknown"))
+
+        # Ensure each unique song is counted only once
+        if song_key not in unique_songs:
+            unique_songs.add(song_key)
+
+            # Properly separate artists using both ',' and '&'
+            raw_artists = song.get("artist", "")
+            artists = set(artist.strip() for artist in raw_artists.replace('&', ',').split(',') if artist.strip())
+
+            # Add unique artists
+            unique_artists.update(artists)
+
+            # Count each artist for unique songs only
+            for artist in artists:
+                artist_count[artist] += 1
+
+            # Count unique songs by date
+            date = song.get("date", "Unknown")
+            date_count[date] += 1
+
+            # Extract month from date
+            try:
+                month = datetime.strptime(date, "%Y-%m-%d").strftime("%B %Y")  # Format: "January 2023"
+                month_count[month] += 1
+            except ValueError:
+                month = "Unknown"
+
+            # Count unique songs by time category
+            time_category = song.get("time_category", "Unknown")
+            time_category_count[time_category] += 1
+
+            # Count unique songs by day of week
+            day_of_week = song.get("day_of_week", "Unknown")
+            day_of_week_count[day_of_week] += 1
+
+    # Sort artists by song count for better visualization
+    sorted_artists = sorted(artist_count.items(), key=lambda x: x[1], reverse=True)
+    print(f"sorted artists total {len(sorted_artists)}")
+    artist_names = [artist[0] for artist in sorted_artists]
+    artist_values = [artist[1] for artist in sorted_artists]
+
+    # Sort dates by song count
+    sorted_dates = sorted(date_count.items(), key=lambda x: x[0])  # Sort by date
+    date_labels = [date[0] for date in sorted_dates]
+    date_values = [date[1] for date in sorted_dates]
+
+    # Sort time categories by song count
+    sorted_time_categories = sorted(time_category_count.items(), key=lambda x: x[0])  # Sort by time category
+    time_category_labels = [time[0] for time in sorted_time_categories]
+    time_category_values = [time[1] for time in sorted_time_categories]
+
+    # Determine the most active day of the week
+    most_active_day = max(day_of_week_count, key=day_of_week_count.get)
+
+    # Get unique months for the filter dropdown
+    unique_months = sorted(month_count.keys())
+
+    # Ensure all data is JSON-serializable
+    serializable_history = []
+    for song in history:
+        serializable_song = {
+            "title": song.get("title", "Unknown"),
+            "artist": song.get("artist", "Unknown"),
+            "date": song.get("date", "Unknown"),
+            "time_category": song.get("time_category", "Unknown"),
+            "day_of_week": song.get("day_of_week", "Unknown")
+        }
+        serializable_history.append(serializable_song)
+
+    return render_template('listening_stats.html', 
+                           unique_songs=len(unique_songs), 
+                           unique_artists=len(unique_artists), 
+                           downloaded_songs=len(os.listdir(SONG_DIRECTORY)), 
+                           most_active_day=most_active_day,
+                           unique_months=unique_months,
+                           artist_names=artist_names,
+                           artist_values=artist_values,
+                           date_labels=date_labels,
+                           date_values=date_values,
+                           time_category_labels=time_category_labels,
+                           time_category_values=time_category_values,
+                           history=serializable_history)
+
 
 @app.route('/downloads/<filename>')
 def download_file(filename):

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Trends</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border: 2px solid #402E7A; /* Dark blue border */
+        }
+        .card-title {
+            font-weight: bold;
+            color: #402E7A; /* Dark blue */
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 2px solid #402E7A; /* Black border */
+        }
+        .form-select {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">MusicCollector by @rishabhc9</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">WiFi Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/listening_stats">Listening Trends</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Stats Section -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" style="color: #402E7A;">🎵 A Look at Your Listening Habits</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Unique Songs</h5>
+                        <p class="card-text display-6">{{ unique_songs }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3" style="border: 2px solid #3DC2EC;">
+                    <div class="card-body">
+                        <h5 class="card-title">Unique Artists</h5>
+                        <p class="card-text display-6">{{ unique_artists }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Downloaded Songs</h5>
+                        <p class="card-text display-6">{{ downloaded_songs }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3" style="border: 2px solid #3DC2EC;">
+                    <div class="card-body">
+                        <h5 class="card-title">Most Active Day</h5>
+                        <p class="card-text display-6">{{ most_active_day }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="row mt-5">
+            <div class="col-md-10 mx-auto">
+                <div class="chart-container">
+                    <h3 class="text-center" style="color: #402E7A">Songs You've Listened to by Artist</h3>
+                    <canvas id="artistChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-10 mx-auto">
+                <div class="chart-container" style="border: 2px solid #4C3BCF;">
+                    <h3 class="text-center" style="color: #4C3BCF">Daily Count of Fresh Tracks You Heard</h3>
+                    <select class="form-select mb-3" id="monthFilterDate" style="border: 1px solid #4C3BCF;">
+                        <option value="All">All Months</option>
+                        {% for month in unique_months %}
+                        <option value="{{ month }}">{{ month }}</option>
+                        {% endfor %}
+                    </select>
+                    <canvas id="dateChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-10 mx-auto">
+                <div class="chart-container" style="border: 2px solid #3DC2EC;">
+                    <h3 class="text-center" style="color: #3DC2EC;">Your Music Hotspots Throughout the Month</h3>
+                    <select class="form-select mb-3" id="monthFilterTime" style="border: 1px solid #3DC2EC;">
+                        <option value="All">All Months</option>
+                        {% for month in unique_months %}
+                        <option value="{{ month }}">{{ month }}</option>
+                        {% endfor %}
+                    </select>
+                    <canvas id="timeCategoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chart.js Script -->
+    <script>
+        // Initial data from Flask
+        const initialData = {
+            artistNames: {{ artist_names | tojson }},
+            artistValues: {{ artist_values | tojson }},
+            dateLabels: {{ date_labels | tojson }},
+            dateValues: {{ date_values | tojson }},
+            timeCategoryLabels: {{ time_category_labels | tojson }},
+            timeCategoryValues: {{ time_category_values | tojson }},
+            history: {{ history | tojson }}
+        };
+    
+        // Songs Per Artist Chart
+        const artistChart = new Chart(document.getElementById('artistChart'), {
+            type: 'bar',
+            data: {
+                labels: initialData.artistNames,
+                datasets: [{
+                    label: 'Number of Songs',
+                    data: initialData.artistValues,
+                    backgroundColor: '#402E7A',
+                    borderColor: '#402E7A',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Unique Songs'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Artists'
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Unique Songs Per Date Chart
+        const dateChart = new Chart(document.getElementById('dateChart'), {
+            type: 'bar',
+            data: {
+                labels: initialData.dateLabels,
+                datasets: [{
+                    label: 'Number of Songs',
+                    data: initialData.dateValues,
+                    backgroundColor: '#4C3BCF',
+                    borderColor: '#4C3BCF',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Unique Songs'
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Unique Songs Per Time Category Chart
+        const timeCategoryChart = new Chart(document.getElementById('timeCategoryChart'), {
+            type: 'bar',
+            data: {
+                labels: initialData.timeCategoryLabels,
+                datasets: [{
+                    label: 'Number of Songs',
+                    data: initialData.timeCategoryValues,
+                    backgroundColor: '#3DC2EC',
+                    borderColor: '#3DC2EC',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time Category'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Unique Songs'
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Function to filter data by month for Unique Songs Per Date
+        function filterDataByMonthDate(month) {
+            if (month === "All") {
+                return initialData.history;
+            }
+            return initialData.history.filter(song => {
+                const songDate = new Date(song.date);
+                const songMonth = songDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+                return songMonth === month;
+            });
+        }
+    
+        // Function to update Unique Songs Per Date Chart
+        function updateDateChart(month) {
+            const filteredData = filterDataByMonthDate(month);
+    
+            // Update Unique Songs Per Date Chart
+            const dateCount = {};
+            filteredData.forEach(song => {
+                const date = song.date;
+                dateCount[date] = (dateCount[date] || 0) + 1;
+            });
+            const sortedDates = Object.keys(dateCount).sort();
+            dateChart.data.labels = sortedDates;
+            dateChart.data.datasets[0].data = sortedDates.map(date => dateCount[date]);
+            dateChart.update();
+        }
+    
+        // Function to filter data by month for Unique Songs Per Time Category
+        function filterDataByMonthTime(month) {
+            if (month === "All") {
+                return initialData.history;
+            }
+            return initialData.history.filter(song => {
+                const songDate = new Date(song.date);
+                const songMonth = songDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+                return songMonth === month;
+            });
+        }
+    
+        // Function to update Unique Songs Per Time Category Chart
+        function updateTimeCategoryChart(month) {
+            const filteredData = filterDataByMonthTime(month);
+    
+            // Update Unique Songs Per Time Category Chart
+            const timeCategoryCount = {};
+            filteredData.forEach(song => {
+                const timeCategory = song.time_category;
+                timeCategoryCount[timeCategory] = (timeCategoryCount[timeCategory] || 0) + 1;
+            });
+            const sortedTimeCategories = Object.keys(timeCategoryCount).sort();
+            timeCategoryChart.data.labels = sortedTimeCategories;
+            timeCategoryChart.data.datasets[0].data = sortedTimeCategories.map(category => timeCategoryCount[category]);
+            timeCategoryChart.update();
+        }
+    
+        // Add event listeners for month filters
+        document.getElementById('monthFilterDate').addEventListener('change', (event) => {
+            const selectedMonth = event.target.value;
+            updateDateChart(selectedMonth);
+        });
+    
+        document.getElementById('monthFilterTime').addEventListener('change', (event) => {
+            const selectedMonth = event.target.value;
+            updateTimeCategoryChart(selectedMonth);
+        });
+    </script>
+</body>
+</html>

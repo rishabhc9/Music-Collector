@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MusicCollector</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .scrollable-box {
@@ -18,7 +17,6 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">MusicCollector by @rishabhc9</a>
@@ -30,24 +28,28 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/wifi">WiFi Settings</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/listening_stats">Listening Trends</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h1 class="mb-4">Song History</h1>
-        <div class="scrollable-box">
-        <div class="scrollable-table">
-            <table class="table table-striped table-hover">
+        <h1 class="mb-4" style="color: #402E7A;">Song History</h1>
+        <div class="row mb-3">
+        </div>
+        <div class="scrollable-box" style="border: 1px solid #402E7A;">
+            <table class="table table-striped table-hover"id="songTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>Title</th>
-                        <th>Artist</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Day of Week</th>
-                        <th>Time Category</th>
+                        <th style="background-color: #402E7A; border: #402E7A;">Title</th>
+                        <th style="background-color: #402E7A; border: #402E7A;">Artist</th>
+                        <th style="background-color: #402E7A; border: #402E7A;">Date</th>
+                        <th style="background-color: #402E7A; border: #402E7A;">Time</th>
+                        <th style="background-color: #402E7A; border: #402E7A;">Day of Week</th>
+                        <th style="background-color: #402E7A; border: #402E7A;">Time Category</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,12 +66,10 @@
                 </tbody>
             </table>
         </div>
-    </div>
-        <div class="container mt-4">
-            <h2>Downloaded Songs</h2>
-            <div class="scrollable-box">
-                <form action="{{ url_for('download_selected_songs') }}" method="post">
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="container mt-4" style="border: 1px solid #402E7A;">
+            <h1 style="color: #402E7A;">Downloaded Songs</h1>
+            <div class="scrollable-box" style="border: 1px solid #402E7A;">
+                <form action="{{ url_for('download_selected_songs') }}" method="post" id="downloadForm">
                     <div class="list-group">
                         {% for song in downloaded_songs %}
                         <label class="list-group-item">
@@ -78,10 +78,30 @@
                         </label>
                         {% endfor %}
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Download Selected Songs as ZIP</button>
+                    <button type="submit" class="btn btn-primary mt-3" style="background-color: #402E7A; border: 1px solid black;">Download Selected Songs as ZIP</button>
+                    <button type="button" class="btn btn-danger mt-3" style="background-color: #3DC2EC; border: 1px solid black;" onclick="deleteSelectedSongs()">Delete Selected Songs</button>
                 </form>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        function deleteSelectedSongs() {
+            const form = document.getElementById('downloadForm');
+            const formData = new FormData(form);
+            fetch('/delete_songs', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                window.location.reload();
+            });
+        }
+
+        
+    </script>
 </body>
 </html>
