@@ -13,9 +13,6 @@ import zipfile
 import io
 
 from collections import defaultdict, Counter
-from bokeh.plotting import figure
-from bokeh.embed import components
-from bokeh.resources import CDN
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
