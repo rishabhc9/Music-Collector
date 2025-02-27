@@ -17,8 +17,13 @@ from collections import defaultdict, Counter
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
+# for rpi
+#HISTORY_FILE = "/home/pi/Desktop/Music-Collector/rpi_music_collector/song_history.json"
+#SONG_DIRECTORY = "/home/pi/Desktop/Music-Collector/rpi_music_collector/Downloaded_Songs"
+
 HISTORY_FILE = "song_history.json"
 SONG_DIRECTORY = "Downloaded_Songs"
+
 LISTENING = False
 last_song = {"title": "", "artist": "", "timestamp": 0}
 last_recognition_time = 0  # Track last recognition time
@@ -284,10 +289,10 @@ def listening_stats():
 
     # Sort artists by song count for better visualization
     sorted_artists = sorted(artist_count.items(), key=lambda x: x[1], reverse=True)
-    print(f"sorted artists total {len(sorted_artists)}")
-    artist_names = [artist[0] for artist in sorted_artists]
-    artist_values = [artist[1] for artist in sorted_artists]
-
+    #print(f"sorted artists total {len(sorted_artists)}")
+    top_25_artists = sorted_artists[:25]
+    artist_names = [artist[0] for artist in top_25_artists]
+    artist_values = [artist[1] for artist in top_25_artists]
     # Sort dates by song count
     sorted_dates = sorted(date_count.items(), key=lambda x: x[0])  # Sort by date
     date_labels = [date[0] for date in sorted_dates]
