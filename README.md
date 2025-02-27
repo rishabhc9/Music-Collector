@@ -6,9 +6,8 @@
 ## Web Interface (for rpi)
 
 <img width="1679" alt="Screenshot 2025-02-27 at 10 15 04 PM" src="https://github.com/user-attachments/assets/d6aab7be-6531-4416-bbf4-c59ef373a858" />
-![Top_20_Songs_by_Listening_Time](https://github.com/user-attachments/assets/5408c249-fb4f-4681-966d-0049eb6aceda)
-![Top_20_Artists_by_Unique_Songs_Listened_To](https://github.com/user-attachments/assets/cfca74d4-0f90-4e4b-93dd-29a85bc8d7a4)
-
+![Image](https://github.com/user-attachments/assets/fd878762-774b-45e8-a323-018ed981459d)
+![Image](https://github.com/user-attachments/assets/660c35bd-9892-4e2a-8f8c-726bb8c63298)
 <img width="1678" alt="Screenshot 2025-02-27 at 10 19 29 PM" src="https://github.com/user-attachments/assets/46bbdb30-a36f-4012-96b2-6ff650b74d54" />
 <img width="1680" alt="Screenshot 2025-02-27 at 10 20 02 PM" src="https://github.com/user-attachments/assets/7caecba4-4d22-4c91-9fbf-1229d0a4a5ef" />
 <img width="1680" alt="Screenshot 2025-02-27 at 10 20 14 PM" src="https://github.com/user-attachments/assets/4bd1c62a-118c-4d2d-b957-1b31af1e9baa" />
