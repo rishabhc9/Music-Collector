@@ -7,7 +7,7 @@
 
 ## Web Interface (for rpi)
 
-<img width="1680" alt="Screenshot 2025-02-28 at 12 38 49 AM" src="https://github.com/user-attachments/assets/34d29e9c-2a27-4d48-9103-11cacaadcc91" />
+<img width="1679" alt="Screenshot 2025-02-28 at 12 42 44 AM" src="https://github.com/user-attachments/assets/a7fd4f8e-0d24-458b-aab5-b93b8c054921" />
 <img width="1680" alt="Screenshot 2025-02-28 at 12 39 32 AM" src="https://github.com/user-attachments/assets/6f62fa0d-274e-4757-8e12-e34aa7cde59c" />
 <img width="1680" alt="Screenshot 2025-02-28 at 12 39 58 AM" src="https://github.com/user-attachments/assets/5f4d8abc-2dbb-4ed8-b76c-268445bc0c1d" />
 <img width="1680" alt="Screenshot 2025-02-28 at 12 40 18 AM" src="https://github.com/user-attachments/assets/4daa3a7f-05b3-4b3b-af66-825a2c335ed6" />
