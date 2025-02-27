@@ -340,69 +340,24 @@ def generate_chart():
     # Calculate duration (each recognition is 10 seconds)
     song_durations = {title: count * 10 for title, count in song_counts.items()}
 
-    # Sort songs by duration and get the top 20
-    sorted_songs = sorted(song_durations.items(), key=lambda x: x[1], reverse=True)[:20]
-    titles = [song[0] for song in sorted_songs]
-    durations = [song[1] for song in sorted_songs]
+    # Prepare data for the chart
+    titles = list(song_durations.keys())
+    durations = list(song_durations.values())
 
-    # Create a horizontal bar chart with the specified color
+    # Create a horizontal bar chart with pastel colors
     plt.figure(figsize=(10, 6))
-    plt.barh(titles, durations, color='#F72C5B')
+    colors = plt.cm.Pastel1(range(len(titles)))  # Pastel color scheme
+    plt.barh(titles, durations, color=colors)
     plt.xlabel("Duration (seconds)")
     plt.ylabel("Song Title")
     plt.tight_layout()
     fig = plt.gcf()
-    fig.canvas.manager.set_window_title("Top 20 Songs by Listening Time")
-    plt.show()
-
-def generate_artist_chart():
-    """Generate a horizontal bar chart for the top 20 artists based on unique songs listened to."""
-    history = []
-    if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, "r") as file:
-            try:
-                history = json.load(file)
-            except json.JSONDecodeError:
-                history = []
-
-    # Unique song tracking
-    unique_songs = set()
-    artist_count = defaultdict(int)
-
-    for song in history:
-        # Create a unique identifier for the song (title + all artists)
-        song_key = (song.get("title", "Unknown"), song.get("artist", "Unknown"))
-
-        # Ensure each unique song is counted only once
-        if song_key not in unique_songs:
-            unique_songs.add(song_key)
-
-            # Properly separate artists using both ',' and '&'
-            raw_artists = song.get("artist", "")
-            artists = set(artist.strip() for artist in raw_artists.replace('&', ',').split(',') if artist.strip())
-
-            # Count each artist for unique songs only
-            for artist in artists:
-                artist_count[artist] += 1
-
-    # Sort artists by song count and get the top 20
-    sorted_artists = sorted(artist_count.items(), key=lambda x: x[1], reverse=True)[:20]
-    artist_names = [artist[0] for artist in sorted_artists]
-    artist_values = [artist[1] for artist in sorted_artists]
-
-    # Create a horizontal bar chart with the specified color
-    plt.figure(figsize=(10, 6))
-    plt.barh(artist_names, artist_values, color='#651ff0')
-    plt.xlabel("Number of Unique Songs Listened To")
-    plt.ylabel("Artist Name")
-    plt.tight_layout()
-    fig = plt.gcf()
-    fig.canvas.manager.set_window_title("Top 20 Artists by Unique Songs Listened To")
+    fig.canvas.manager.set_window_title("Song Wise Listening Time")  # Set window title
     plt.show()
 
 # GUI Setup
 root = tk.Tk()
-root.title("MusicCollector by @rishabhc9")
+root.title("Background Song Identifier")
 root.geometry("1200x625")
 root.resizable(True, False)
 
@@ -419,12 +374,8 @@ stop_btn.grid(row=0, column=1, padx=5)
 export_btn = tk.Button(frame, text="Export History", command=export_history, **button_style)
 export_btn.grid(row=0, column=2, padx=5)
 
-chart_button = tk.Button(frame, text="Top Songs", command=generate_chart, **button_style)
+chart_button = tk.Button(frame, text="Generate Listening Time Chart", command=generate_chart, **button_style)
 chart_button.grid(row=0, column=3, padx=5)
-
-chart_button = tk.Button(frame, text="Top Artists", command=generate_artist_chart, **button_style)
-chart_button.grid(row=0, column=4, padx=5)
-
 
 delete_btn = tk.Button(root, text="Delete Selected Songs", command=delete_song, **button_style)
 delete_btn.pack(pady=5)
