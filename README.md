@@ -27,6 +27,26 @@
         * Daily Count of Fresh Tracks
         * Your Music Hotspots Throughout the Month (Time Slot when you discover the most tracks)
 
+Installation & Setup  
+
+### Clone the Repository  
+```sh
+git clone https://github.com/rishabhc9/Music-Collector.git
+cd Music-Collector
+```
+### Run the program (Desktop App with GUI)
+```sh
+python3 MusicCollector.py
+```
+### Run the program (Desktop App with auto-downloading)
+```sh
+python3 autoscript.py
+```
+### Run the program (Web Interface, cd inside rpi_music_collector folder and run)
+```sh
+python3 autoscript_for_rpi.py
+```
+
 ## Desktop Interface
 <img width="994" alt="Screenshot 2025-02-27 at 10 14 28 PM" src="https://github.com/user-attachments/assets/cc461318-62b4-42c8-8a89-088a21d9c18a" />
 <img width="994" alt="Screenshot 2025-02-28 at 12 18 45 AM" src="https://github.com/user-attachments/assets/46903000-b3b6-4b00-b5b1-7a08a40dee78" />
