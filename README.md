@@ -1,5 +1,32 @@
 # Music Collector
- 
+Features:
+1. Song Identification:
+    * Uses the Shazam API to identify songs playing around you.
+    * Records audio snippets and matches them against Shazam’s database.
+2. Song History Tracking:
+    * Keeps a detailed history of all identified songs, including:
+        * Song title and artist
+        * Date and time of recognition
+        * Time category (morning, afternoon, evening, night)
+        * Day of the week
+3. Song Downloading:
+    * Automatically downloads identified songs using yt-dlp.
+    * Organizes downloaded songs into a dedicated folder.
+4. Listening Trends Chart (Desktop App)
+    * Top Songs Chart (A chart that displays the total listening duration for each song & visualizes the top 20 songs based on listening duration.)
+    * Top Artists Chart (A chart that displays the number of unique songs identified for each artist & Visualizes the top 20 artists based on the number of unique songs identified)
+5. Filtering, Sorting & Searching (only for Desktop app)
+    * Allows users to filter the song history based on specific parameters (Title, Artist, Date, Time, Day of Week, Time Category).
+    * Allows users to sort the song history in ascending or descending order based on a selected parameter.
+    * Allows user to search for a specific song
+6. Listening Trends Dashboard (Web Interface):
+    * A Flask-based web dashboard to visualize your listening habits:
+        * Unique songs and artists
+        * Most active day of the week
+        * Songs You've Listened to by Artist 
+        * Daily Count of Fresh Tracks
+        * Your Music Hotspots Throughout the Month (Time Slot when you discover the most tracks)
+
 ## Desktop Interface
 <img width="994" alt="Screenshot 2025-02-27 at 10 14 28 PM" src="https://github.com/user-attachments/assets/cc461318-62b4-42c8-8a89-088a21d9c18a" />
 <img width="994" alt="Screenshot 2025-02-28 at 12 18 45 AM" src="https://github.com/user-attachments/assets/46903000-b3b6-4b00-b5b1-7a08a40dee78" />
