@@ -1,5 +1,5 @@
 # Music Collector
-Features:
+## Features:
 1. Song Identification:
     * Uses the Shazam API to identify songs playing around you.
     * Records audio snippets and matches them against Shazam’s database.
