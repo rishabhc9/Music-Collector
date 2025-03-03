@@ -27,7 +27,7 @@
         * Daily Count of Fresh Tracks
         * Your Music Hotspots Throughout the Month (Time Slot when you discover the most tracks)
 
-Installation & Setup  
+## Installation & Setup  
 
 ### Clone the Repository  
 ```sh
