@@ -48,8 +48,8 @@ python3 autoscript_for_rpi.py
 ```
 ### Make Sure to install these libraries
 ```sh
-yt-dlp==2025.1.26'
-ytmdl==2024.8.15.1'
+yt-dlp==2025.1.26
+ytmdl==2024.8.15.1
 httpx==0.27.2
 shazamio==0.6.0
 ```
