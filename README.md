@@ -52,8 +52,9 @@ yt-dlp==2025.1.26
 ytmdl==2024.8.15.1
 httpx==0.27.2
 shazamio==0.6.0
-ffmpeg==1.4
 pyaudio==0.2.14
+ffmpeg-python
+pydub
 ```
 >>> 
 ## Desktop Interface
