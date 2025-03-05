@@ -38,9 +38,9 @@ cd Music-Collector
 ```sh
 python3 MusicCollector.py
 ```
-### Run the program (Desktop App with auto-downloading)
+### Run the program (Desktop CLI App with auto-downloading)
 ```sh
-python3 autoscript.py
+python3 MusicCollector(CLI Auto-Download).py
 ```
 ### Run the program (Web Interface, cd inside rpi_music_collector folder and run)
 ```sh
