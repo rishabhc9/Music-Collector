@@ -41,8 +41,6 @@ last_recognition_time = 0  # Track last recognition time
 if not os.path.exists(SONG_DIRECTORY):
     os.makedirs(SONG_DIRECTORY)
 
-app = Flask(__name__)
-
 def get_time_category(timestamp):
     """Categorize time into morning, afternoon, evening, or night."""
     hour = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").hour
